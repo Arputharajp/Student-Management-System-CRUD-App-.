@@ -1,0 +1,102 @@
+# student_management.py
+import sqlite3
+
+# -----------------------------
+# Database Setup
+# -----------------------------
+con = sqlite3.connect("students.db")
+cur = con.cursor()
+
+cur.execute("""
+CREATE TABLE IF NOT EXISTS students(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    roll_no TEXT,
+    department TEXT
+)
+""")
+con.commit()
+
+
+# -----------------------------
+# CRUD Functions
+# -----------------------------
+def add_student(name, roll_no, department):
+    cur.execute("INSERT INTO students(name, roll_no, department) VALUES (?, ?, ?)",
+                (name, roll_no, department))
+    con.commit()
+    print("Student added successfully!")
+
+
+def view_students():
+    print("\n📋 Student Records:")
+    rows = cur.execute("SELECT * FROM students").fetchall()
+    if not rows:
+        print("⚠️ No records found.")
+    else:
+        for row in rows:
+            print(f"ID: {row[0]}, Name: {row[1]}, Roll No: {row[2]}, Department: {row[3]}")
+
+
+def update_student(student_id, new_name):
+    cur.execute("UPDATE students SET name=? WHERE id=?", (new_name, student_id))
+    con.commit()
+    if cur.rowcount > 0:
+        print("Student updated successfully!")
+    else:
+        print("Student ID not found!")
+
+
+def delete_student(student_id):
+    cur.execute("DELETE FROM students WHERE id=?", (student_id,))
+    con.commit()
+    if cur.rowcount > 0:
+        print("Student deleted successfully!")
+    else:
+        print("Student ID not found!")
+
+
+# -----------------------------
+# Menu-driven Program
+# -----------------------------
+if __name__ == "__main__":
+    while True:
+        print("\n--- 🎓 Student Management System ---")
+        print("1. Add Student")
+        print("2. View Students")
+        print("3. Update Student")
+        print("4. Delete Student")
+        print("5. Exit")
+        
+        choice = input("Enter choice: ")
+
+        if choice == "1":
+            name = input("Enter name: ")
+            roll = input("Enter roll number: ")
+            dept = input("Enter department: ")
+            add_student(name, roll, dept)
+
+        elif choice == "2":
+            view_students()
+
+        elif choice == "3":
+            try:
+                sid = int(input("Enter student ID to update: "))
+                new_name = input("Enter new name: ")
+                update_student(sid, new_name)
+            except ValueError:
+                print("Invalid input. Enter a valid number.")
+
+        elif choice == "4":
+            try:
+                sid = int(input("Enter student ID to delete: "))
+                delete_student(sid)
+            except ValueError:
+                print(" Invalid input. Enter a valid number.")
+
+        elif choice == "5":
+            print("Exiting... Goodbye!")
+            break
+
+        else:
+            print("Invalid choice! Please select 1–5.")
