@@ -29,10 +29,10 @@ def add_student(name, roll_no, department):
 
 
 def view_students():
-    print("\n📋 Student Records:")
+    print("\n Student Records:")
     rows = cur.execute("SELECT * FROM students").fetchall()
     if not rows:
-        print("⚠️ No records found.")
+        print(" No records found.")
     else:
         for row in rows:
             print(f"ID: {row[0]}, Name: {row[1]}, Roll No: {row[2]}, Department: {row[3]}")
@@ -61,7 +61,7 @@ def delete_student(student_id):
 # -----------------------------
 if __name__ == "__main__":
     while True:
-        print("\n--- 🎓 Student Management System ---")
+        print("\n--- Student Management System ---")
         print("1. Add Student")
         print("2. View Students")
         print("3. Update Student")
